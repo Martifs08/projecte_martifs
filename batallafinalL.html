@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: black;
+}
+video {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+#text {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-family: Arial;
+}
+</style>
+</head>
+
+<body>
+
+<video autoplay>
+    <source src="videos/gameover.mp4" type="video/mp4">
+</video>
+
+<div id="text">Prem ENTER per continuar...</div>
+
+<script>
+window.addEventListener("keydown", function(e){
+    if (e.key === "Enter") {
+        window.location.href = "fi.html";
+    }
+});
+</script>
+
+</body>
+</html>

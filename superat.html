@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<title>Island Adventure</title>
+
+<style>
+    body {
+        background-color: #f2f2f2;
+        text-align: center;
+        padding-top: 60px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: 1px solid #333;
+        background-color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #e6e6e6;
+    }
+</style>
+
+<body> 
+    <div>
+        <h1>HAS SUPERAT EL NIVELL!!</h1>
+        <p>Puntuació: <span id="punts"></span></p>
+        <button onclick="window.location.href='castle.html'">Avançar últim nivell</button>
+    </div>
+</body>
+<script>
+    const points = sessionStorage.getItem("points");
+    document.getElementById("punts").textContent = points;
+</script>
+</html>

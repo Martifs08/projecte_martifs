@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Introducció</title>
+
+<style>
+body {
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 80px;
+}
+
+#text {
+    width: 600px;
+    margin: auto;
+    font-size: 1.2rem;
+    color: #333;
+}
+</style>
+</head>
+
+<body>
+
+<div id="text">
+    <h1>Benvingut a Island Adventure</h1>
+    <p>
+        Fa molts anys, una tempesta terrible va separar el teu vaixell de la flota.
+        Ara navegues sol, buscant recursos, lluitant contra pirates i monstres,
+        i intentant trobar el camí de tornada a casa.
+    </p>
+</div>
+
+<script>
+window.addEventListener("keydown", function(e) {
+    if (e.keyCode === 13) {
+        window.location.href = "pirate.html";
+    }
+});
+</script>
+
+</body>
+</html>

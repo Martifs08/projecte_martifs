@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<title>Island Adventure</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        height: 100vh;
+        overflow: hidden;  /* Elimina el scroll */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        flex-shrink: 0;
+    }
+    
+    #contenidor {
+        display: flex;
+        width: 100%;
+        gap: 30px;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    
+    #tauler {
+        width: 448px;
+        height: 448px;
+        overflow: hidden;  /* ¡Importante! El usuario no puede hacer scroll */
+        border: 3px solid #333;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        position: relative;
+        margin: 50px;;
+    }
+
+    #tauler::-webkit-scrollbar {
+        display: none;  /*oculta la barra */
+    }
+    
+    #stage {
+        position: relative;
+        width: 1280px;
+        height: 1280px;
+        background-image: url("images/background2.png");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    
+    #info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .cell {
+        display: block;
+        position: absolute;
+        width: 64px;
+        height: 64px;
+    }
+    
+    p {
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        margin: 0;
+        padding: 10px;
+        background-color: #f0f0f0;
+    }
+
+    .barra {
+        width: 40%;
+        background-color: #ddd;
+        height: 12px;
+        margin: 3px 0;
+    }
+
+    .barra-dins {
+        height: 12px;
+        width: 0%;
+    }
+
+    .oro { background-color: gold;  }
+
+    .menjar { background-color: green;  }
+
+    .exp { background-color: blue; }
+</style>
+
+<h1>Segon Nivell: El castell</h1>
+<div id="contenidor">
+    <div id="tauler">
+        <div id="stage"></div>
+    </div>
+    <div id="info">
+        <p id="output"></p>
+        <p id="motxilla"></p>
+        <p id="puntuacio"></p>
+
+        <div>Or</div>
+        <div class="barra"><div id="barra-oro" class="barra-dins oro"></div></div>
+
+        <div>Menjar</div>
+        <div class="barra"><div id="barra-menjar" class="barra-dins menjar"></div></div>
+
+        <div>Experiència</div>
+        <div class="barra"><div id="barra-exp" class="barra-dins exp"></div></div>
+    </div>
+</div>
+
+<script>
+
+var stage = document.querySelector("#stage");
+var output = document.querySelector("#output");
+var puntuacio = document.querySelector("#puntuacio");
+var motxilla = document.querySelector("#motxilla")
+
+//Add a keyboard listener
+window.addEventListener("keydown", keydownHandler, false);
+
+//The game map
+var map = [
+    [0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1],
+    [1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0],
+    [0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 0],
+    [2, 0, 0, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0],
+    [0, 0, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1],
+    [0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0],
+    [0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0],
+    [0, 2, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 2, 0, 1, 0, 2, 0, 0],
+    [1, 0, 2, 0, 1, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0, 2, 0],
+    [0, 1, 0, 2, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 2, 0, 1, 0, 2],
+    [0, 0, 1, 0, 2, 0, 1, 0, 2, 0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 0],
+    [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1],
+    [0, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 0, 0, 2, 0],
+    [0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2],
+    [2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0],
+    [0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 0, 0, 0],
+    [6, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 0, 0, 0, 0],
+    [0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2],
+    [0, 0, 0, 0, 2, 0, 1, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0]
+];
+
+var gameObjects = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],  
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0],  
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
+
+//Map Code
+var WATER = 0;
+var ISLAND = 1;
+var PIRATE = 2;
+var SHIP = 4;
+var MONSTER = 5;
+var ESPASA = 6;
+var JEFE = 7;
+ 
+//Arrow key codes
+ var UP = 38;
+ var DOWN = 40;
+ var RIGHT = 39;
+ var LEFT = 37;
+
+//The size of each cell
+var SIZE = 64;
+//Number of rows and columns
+var ROWS = map.length;
+var COLUMNS = map[0].length;
+
+//An automatic way of setting the ship's start position
+var shipRow;
+var shipColumn;
+var monsterRow;
+var monsterColumn;
+var jefeRow;
+var jefeColumn;
+
+//The game variables
+var food = 20;
+var gold = 10;
+var experience = 0;
+var gameMessage = "Use the arrow keys to find your way home."
+let points2 = 0;
+let jefeDerrotat = false;
+let motxillaContador = 0;
+let motxillaItems = [];
+var imatgeprota = "images/prota_no_sword.png";
+
+for(var row = 0; row < ROWS; row++)
+{
+    for(var column = 0; column < COLUMNS; column++)
+    {
+        if(gameObjects[row][column] === SHIP){
+            shipRow = row;
+            shipColumn = column;
+        }
+        if(gameObjects[row][column] === MONSTER){
+            monsterRow = row;
+            monsterColumn = column;
+        }
+        if(gameObjects[row][column] === JEFE){
+            jefeRow = row;
+            jefeColumn = column;
+        }
+    }
+}
+
+
+render();
+
+function keydownHandler(event)
+{
+    switch(event.keyCode)
+    {
+        case UP:
+            if(shipRow > 0){
+                gameObjects[shipRow][shipColumn] = 0;
+                shipRow--;
+                gameObjects[shipRow][shipColumn] = SHIP;
+                food--;
+            }
+        break;
+
+        case DOWN:
+            if(shipRow < ROWS - 1 ){
+                gameObjects[shipRow][shipColumn] = 0;
+                shipRow++;
+                gameObjects[shipRow][shipColumn] = SHIP;
+                food--;
+            }
+        break;
+
+        case LEFT:
+            if(shipColumn > 0){
+                gameObjects[shipRow][shipColumn] = 0;
+                shipColumn--;
+                gameObjects[shipRow][shipColumn] = SHIP;
+                food--;
+            }
+        break;
+
+        case RIGHT:
+            if(shipColumn < COLUMNS - 1)
+            {
+                gameObjects[shipRow][shipColumn] = 0;
+                shipColumn++;
+                gameObjects[shipRow][shipColumn] = SHIP;
+                food--;
+            }
+        break;
+    }
+
+    switch(map[shipRow][shipColumn])
+    {
+        case WATER:
+            gameMessage = "You sail the open seas."
+        break;
+
+        case PIRATE:
+            fight();
+        break;
+
+        case ISLAND:
+            trade();
+        break;
+
+        case ESPASA:
+            espasa();
+
+    }
+
+    moveMonster();
+    moveJefe();
+
+    if(gameObjects[shipRow][shipColumn] === MONSTER)
+    {
+        endGame();
+    }
+    if(gameObjects[shipRow][shipColumn] === JEFE) {
+    
+        batallafinal();
+    }
+    if(food <=0 || gold <=0)
+    {
+        endGame();
+    }
+
+    render();
+    centrarCamara();
+}
+
+function moveMonster(){
+
+    var UP = 1;
+    var DOWN = 2;
+    var LEFT = 3;
+    var RIGHT = 4;
+
+    var validDirections = [];
+
+    var direction = undefined;
+
+    if(monsterRow > 0)
+    {
+        var thingAbove = map[monsterRow - 1][monsterColumn];
+        if (thingAbove === WATER) validDirections.push(UP); 
+    }
+    if(monsterRow < ROWS -1)
+    {
+        var thingBelow = map[monsterRow + 1][monsterColumn];
+        if (thingBelow === WATER) validDirections.push(DOWN); 
+    }
+     if(monsterColumn > 0)
+    {
+        var thingToTheLeft = map[monsterRow][monsterColumn - 1];
+        if (thingToTheLeft === WATER) validDirections.push(LEFT); 
+    }
+     if(monsterColumn < COLUMNS - 1)
+    {
+        var thingToTheRight = map[monsterRow][monsterColumn + 1];
+        if (thingToTheRight === WATER) validDirections.push(RIGHT); 
+    }
+
+    var randomNumber = Math.floor(Math.random() * validDirections.length);
+    direction = validDirections[randomNumber];
+
+    gameObjects[monsterRow][monsterColumn] = 0;
+
+    switch(direction)
+    {
+        case UP:
+            //monsterRow--;
+            gameObjects[--monsterRow][monsterColumn] = MONSTER;
+        break;
+
+        case DOWN:
+            //monsterRow++;
+            gameObjects[++monsterRow][monsterColumn] = MONSTER;
+        break;
+
+        case LEFT:
+            //monsterColumn--;
+            gameObjects[monsterRow][--monsterColumn] = MONSTER;
+        break;
+
+        case RIGHT:
+            //monsterColumn++;
+            gameObjects[monsterRow][++monsterColumn] = MONSTER;
+        break;
+    }
+
+}
+
+function moveJefe(){
+
+    // DETECTAR SI EL JUGADOR ESTÁ CERCA (ADYACENTE) O EN LA MISMA CASILLA
+    var jugadorCerca = false;
+    
+    // Comprobar las 4 direcciones adyacentes Y la misma casilla
+    if((jefeRow - 1 === shipRow && jefeColumn === shipColumn) ||  // arriba
+       (jefeRow + 1 === shipRow && jefeColumn === shipColumn) ||  // abajo
+       (jefeRow === shipRow && jefeColumn - 1 === shipColumn) ||  // izquierda
+       (jefeRow === shipRow && jefeColumn + 1 === shipColumn) ||  // derecha
+       (jefeRow === shipRow && jefeColumn === shipColumn)) {      // MISMA CASILLA
+        jugadorCerca = true;
+    }
+    
+    // Si el jugador está cerca o en la misma casilla, activar final
+    if(jugadorCerca) {
+        batallafinal();
+        return;
+    }
+
+    var UP = 1;
+    var DOWN = 2;
+    var LEFT = 3;
+    var RIGHT = 4;
+
+    var validDirections = [];
+
+    var direction = undefined;
+
+    if(jefeRow > 0)
+    {
+        var thingAbove = map[jefeRow - 1][jefeColumn];
+        if (thingAbove === WATER) validDirections.push(UP); 
+    }
+    if(jefeRow < ROWS -1)
+    {
+        var thingBelow = map[jefeRow + 1][jefeColumn];
+        if (thingBelow === WATER) validDirections.push(DOWN); 
+    }
+     if(jefeColumn > 0)
+    {
+        var thingToTheLeft = map[jefeRow][jefeColumn - 1];
+        if (thingToTheLeft === WATER) validDirections.push(LEFT); 
+    }
+     if(jefeColumn < COLUMNS - 1)
+    {
+        var thingToTheRight = map[jefeRow][jefeColumn + 1];
+        if (thingToTheRight === WATER) validDirections.push(RIGHT); 
+    }
+
+    if(validDirections.length === 0) return;
+
+    var randomNumber = Math.floor(Math.random() * validDirections.length);
+    direction = validDirections[randomNumber];
+
+    gameObjects[jefeRow][jefeColumn] = 0;
+
+    switch(direction)
+    {
+        case UP:
+            gameObjects[--jefeRow][jefeColumn] = JEFE;
+        break;
+
+        case DOWN:
+            gameObjects[++jefeRow][jefeColumn] = JEFE;
+        break;
+
+        case LEFT:
+            gameObjects[jefeRow][--jefeColumn] = JEFE;
+        break;
+
+        case RIGHT:
+            gameObjects[jefeRow][++jefeColumn] = JEFE;
+        break;
+    }
+}
+
+function trade(){
+    //Figure out how much food the island have and the cost
+    var islandFood = experience + gold;
+    var cost = Math.ceil(Math.random() * islandFood);
+    
+    //Let the player buy food if there's enough gold
+    if (gold > cost)
+    {
+        food += islandFood;
+        gold -= cost;
+        experience += 2;
+        points2 += 10;
+
+        gameMessage = "you buy " + islandFood + " coconuts"
+           + " for " + cost + " gold pieces."
+    }
+    else
+    {   //Tell the player if he does not have enough gold
+        experience += 1;
+        gameMessage = "You don't have enough gold to buy food."
+        points2 -= 5;
+    }
+}
+
+function espasa(){
+    gameMessage = "Has trobat una espasa!";
+    motxillaContador++;
+    motxillaItems = "Espasa";
+    imatgeprota = "images/prota.png"
+}
+
+function fight(){
+    var shipStrength = Math.ceil((food + gold) / 2);
+
+    var pirateStrength = Math.ceil(Math.random() * shipStrength * 2);
+
+    if(pirateStrength > shipStrength)
+    {
+        var stolenGold = Math.round(pirateStrength / 2);
+        gold -= stolenGold;
+
+        experience += 1;
+
+        gameMessage = "You fight and LOSE " + stolenGold + " gold pieces."
+          + " Ship's strength: " + shipStrength
+          + " Pirate strength: " + pirateStrength;
+
+        points2 -= 10;
+    }   
+    else
+    {
+        var pirateGold = Math.round(pirateStrength / 2);
+        gold += pirateGold;
+
+        experience += 2;
+
+        gameMessage = "You fight and WIN " + pirateGold + " gold pieces."
+          + " Ship's strength: " + shipStrength
+          + " Pirate strength: " + pirateStrength;
+
+        points2 += 20;
+    }
+}
+
+
+function endGame(){
+    if(gameObjects[shipRow][shipColumn] === MONSTER)
+    {
+       gameMessage = "Your ship has been swallowed by a sea monster!";
+       points2 -= 150;
+       sessionStorage.setItem("points2", points2);
+       sessionStorage.setItem("gameMessage", gameMessage);
+       let p1 = Number(sessionStorage.getItem("points")) || 0;
+            let p2 = Number(sessionStorage.getItem("points2")) || 0;
+            let total = p1 + p2;
+            sessionStorage.setItem("total", total);
+
+        let record = Number(localStorage.getItem("record")) || 0;
+        if (total > record) {
+            localStorage.setItem("record", total);
+        }
+
+       window.location.href = "fi.html";
+    }
+    if(gameObjects[shipRow][shipColumn] === JEFE)
+    {
+        batallafinal();
+    }
+    else
+    {
+        if(gold <= 0)
+        {
+            gameMessage += " You've run out of gold!";
+            sessionStorage.setItem("points2", points2);
+            sessionStorage.setItem("gameMessage", gameMessage);
+            let p1 = Number(sessionStorage.getItem("points")) || 0;
+            let p2 = Number(sessionStorage.getItem("points2")) || 0;
+            let total = p1 + p2;
+            sessionStorage.setItem("total", total);
+
+            let record = Number(localStorage.getItem("record")) || 0;
+            if (total > record) {
+                localStorage.setItem("record", total);
+            }
+            
+            window.location.href = "fi.html";  
+        }
+        else if (food == 0)
+        {
+            gameMessage += " You've run out of food!";
+            sessionStorage.setItem("points2", points2);
+            sessionStorage.setItem("gameMessage", gameMessage);
+            
+            let p1 = Number(sessionStorage.getItem("points")) || 0;
+            let p2 = Number(sessionStorage.getItem("points2")) || 0;
+            let total = p1 + p2;
+            sessionStorage.setItem("total", total);
+            
+            let record = Number(localStorage.getItem("record")) || 0;
+                if (total > record) {
+                localStorage.setItem("record", total);
+            }  
+            
+            window.location.href = "fi.html"; 
+        } 
+       
+    //Remove the keyboard listener
+    window.removeEventListener("keydown", keydownHandler, false);
+}
+}
+
+function batallafinal(){
+    if(motxillaContador === 0 && jefeDerrotat === false){
+        window.location.href = "batallafinalL.html";
+        gameMessage = "No has pogut amb el jefe Periquito";
+        sessionStorage.setItem("points2", points2);
+        sessionStorage.setItem("gameMessage", gameMessage);
+        let p1 = Number(sessionStorage.getItem("points")) || 0;
+        let p2 = Number(sessionStorage.getItem("points2")) || 0;
+        let total = p1 + p2;
+        sessionStorage.setItem("total", total);
+
+        let record = Number(localStorage.getItem("record")) || 0;
+        if (total > record) {
+            localStorage.setItem("record", total);
+        }
+    }
+    if(motxillaContador === 1 && jefeDerrotat === false){
+        window.location.href = "batallafinalW.html";
+        jefeDerrotat = true;
+        gameMessage = "Has derrotat al jefe Periquito!! Enhorabona";
+        sessionStorage.setItem("points2", points2);
+        sessionStorage.setItem("gameMessage", gameMessage);
+        let p1 = Number(sessionStorage.getItem("points")) || 0;
+        let p2 = Number(sessionStorage.getItem("points2")) || 0;
+        let total = p1 + p2;
+        sessionStorage.setItem("total", total);
+
+        let record = Number(localStorage.getItem("record")) || 0;
+        if (total > record) {
+            localStorage.setItem("record", total);
+        }
+    }
+}
+
+function render()
+{
+    //Clear the stage of img tag cells from the previous turn
+    if(stage.hasChildNodes())
+    {
+        for (var i=0; i < ROWS * COLUMNS; i++)
+        {
+            stage.removeChild(stage.firstChild);
+        }
+    }
+
+    //Render the game by looping through the map arrays
+    for(var row = 0; row < ROWS; row++)
+    {
+        for(var column = 0; column < COLUMNS; column++)
+            {
+                var cell = document.createElement("img");
+                //Set its CSS class to "cell"
+                cell.setAttribute("class", "cell");
+                stage.appendChild(cell);
+
+                switch(map[row][column])
+                { 
+                    case WATER:
+                        cell.src = "images/water.png";
+                        break;
+                    case ISLAND:
+                        cell.src = "images/island.png";
+                        break;
+                    case PIRATE:
+                        cell.src = "images/skeleton.png";
+                        break;
+                    case ESPASA:
+                        cell.src = "images/espasa.png";
+                        break;
+                }
+                switch(gameObjects[row][column])
+                { 
+                    case SHIP:
+                        cell.src = imatgeprota;
+                        break;
+                    case MONSTER:
+                        cell.src = "images/monster.png";
+                        break;
+                    case JEFE:
+                        cell.src = "images/jefe.png";
+                        break;
+                }
+
+                //Position the cell
+                cell.style.top = row * SIZE + "px";
+                cell.style.left = column * SIZE + "px";
+            }
+    }
+
+    // Display the game gameMessage
+    output.innerHTML = gameMessage;
+
+    //Display the playter's food, gold aand experience
+    output.innerHTML += "<br>Gold: " + gold + "<br>Food: "
+        + food + "<br>Experience: " + experience; 
+    
+    puntuacio.innerHTML = "Punts: " + points2;
+    motxilla.innerHTML = "Motxilla: " + motxillaItems;
+
+    centrarCamara();
+    actualizarBarras();
+}
+
+function centrarCamara() {
+    var tauler = document.getElementById("tauler");
+    if (!tauler) return;
+    
+    // Posición del barco en píxeles
+    var barcoX = shipColumn * SIZE;
+    var barcoY = shipRow * SIZE;
+    
+    // Tamaño del viewport
+    var viewportWidth = tauler.clientWidth;
+    var viewportHeight = tauler.clientHeight;
+    
+    // Calcular scroll para centrar el barco
+    var scrollLeft = barcoX - (viewportWidth / 2) + (SIZE / 2);
+    var scrollTop = barcoY - (viewportHeight / 2) + (SIZE / 2);
+    
+    // Limitar scroll dentro del mapa
+    scrollLeft = Math.max(0, Math.min(scrollLeft, COLUMNS * SIZE - viewportWidth));
+    scrollTop = Math.max(0, Math.min(scrollTop, ROWS * SIZE - viewportHeight));
+    
+    // Aplicar scroll automático
+    tauler.scrollLeft = scrollLeft;
+    tauler.scrollTop = scrollTop;
+}
+
+function actualizarBarras() {
+    var barraOro = document.getElementById("barra-oro");
+    var barraMenjar = document.getElementById("barra-menjar");
+    var barraExp = document.getElementById("barra-exp");
+    
+    if (barraOro) barraOro.style.width = Math.min(100, (gold / 100) * 100) + "%";
+    if (barraMenjar) barraMenjar.style.width = Math.min(100, (food / 100) * 100) + "%";
+    if (barraExp) barraExp.style.width = Math.min(100, (experience / 50) * 100) + "%";
+}
+
+</script>
