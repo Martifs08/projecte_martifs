@@ -1,38 +1,262 @@
 <!DOCTYPE html>
-<title>Island Adventure</title>
+<title>Island Adventure - La Isla de los Piratas</title>
 
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     body {
-        background-image: url("images/inici.jpg");
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a0f0a 50%, #0d0603 100%);
         text-align: center;
-        padding-top: 60px;
+        padding: 60px 20px;
+        font-family: 'Courier New', 'Times New Roman', 'Georgia', monospace;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Fondo de mapa antiguo con efecto parchment */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            repeating-linear-gradient(45deg, rgba(139, 69, 19, 0.08) 0px, rgba(139, 69, 19, 0.08) 2px, transparent 2px, transparent 8px),
+            repeating-linear-gradient(135deg, rgba(100, 50, 20, 0.05) 0px, rgba(100, 50, 20, 0.05) 1px, transparent 1px, transparent 6px);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Partículas flotantes (arena/polvo mágico) */
+    body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(2px 2px at 20% 40%, rgba(212, 175, 55, 0.3), rgba(0,0,0,0)),
+                          radial-gradient(1px 1px at 60% 80%, rgba(212, 165, 115, 0.2), rgba(0,0,0,0));
+        background-size: 200px 200px, 150px 150px;
+        background-repeat: repeat;
+        pointer-events: none;
+        animation: flotar 20s linear infinite;
+        z-index: 0;
+    }
+
+    @keyframes flotar {
+        0% { background-position: 0 0, 0 0; }
+        100% { background-position: 200px 200px, 150px 150px; }
+    }
+
+    /* Contenedor principal con efecto pergamino */
+    div {
+        position: relative;
+        z-index: 1;
+        background: rgba(245, 235, 200, 0.92);
+        backdrop-filter: blur(3px);
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 50px 40px;
+        border-radius: 60px 60px 80px 80px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
+        border: 2px solid rgba(212, 175, 55, 0.6);
+        transition: transform 0.3s ease;
+    }
+
+    div:hover {
+        transform: scale(1.02);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+    }
+
+    /* Decoración de calavera */
+    div::before {
+        content: "☠ ⚓ ☠";
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2em;
+        letter-spacing: 8px;
+        color: #8b4513;
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+        background: rgba(245, 235, 200, 0.9);
+        padding: 0 20px;
+        border-radius: 30px;
+    }
+
+    /* Esquinas decorativas */
+    div::after {
+        content: "⚔";
+        position: absolute;
+        bottom: 15px;
+        left: 20px;
+        font-size: 1.5em;
+        opacity: 0.5;
+        color: #8b6914;
     }
 
     h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
-        color: #333;
+        font-size: 2.5rem;
+        margin-bottom: 25px;
+        font-family: 'Times New Roman', 'Georgia', serif;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #5a2a0a;
+        text-shadow: 3px 3px 0px rgba(184, 124, 58, 0.3);
+        border-bottom: 2px solid #d4a373;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+    /* Estilo mejorado para los párrafos (textos normales) */
+    p {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        font-size: 1.15em;
+        line-height: 1.8;
+        color: #2a1a0a;
+        margin: 15px 0;
+        text-align: center;
+        text-shadow: 0.5px 0.5px 0px rgba(255,255,255,0.5);
+        letter-spacing: 0.5px;
+    }
+
+    /* Estilo especial para el nombre del autor */
+    p:first-of-type {
+        font-weight: bold;
+        color: #6b4423;
+        border-top: 1px dashed #d4a373;
+        padding-top: 15px;
+        margin-top: 20px;
     }
 
     button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        border: 1px solid #333;
-        background-color: white;
+        margin-top: 30px;
+        padding: 14px 35px;
+        font-size: 1.3rem;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        border: 2px solid #b87c3a;
+        background: linear-gradient(135deg, #4a2a15 0%, #2a1508 100%);
+        color: #f0d890;
         cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        border-radius: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
     button:hover {
-        background-color: #e6e6e6;
+        background: linear-gradient(135deg, #6a3a1a 0%, #3a1a0a 100%);
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        border-color: #f0c060;
+        color: #ffe8a0;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+    /* Decoración de iconos alrededor del botón */
+    button::before {
+        content: "⚔";
+        position: absolute;
+        left: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2em;
+        opacity: 0;
+        transition: all 0.3s;
+    }
+
+    button:hover::before {
+        opacity: 1;
+        left: -25px;
+    }
+
+    button::after {
+        content: "⚔";
+        position: absolute;
+        right: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2em;
+        opacity: 0;
+        transition: all 0.3s;
+    }
+
+    button:hover::after {
+        opacity: 1;
+        right: -25px;
+    }
+
+    /* Responsive */
+    @media (max-width: 550px) {
+        body {
+            padding: 30px 15px;
+        }
+        
+        div {
+            padding: 40px 25px;
+        }
+        
+        h1 {
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+        }
+        
+        p {
+            font-size: 1em;
+        }
+        
+        button {
+            padding: 10px 25px;
+            font-size: 1rem;
+        }
+        
+        div::before {
+            font-size: 1.3em;
+            top: -18px;
+            letter-spacing: 5px;
+        }
+    }
+
+    /* Animación de entrada */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    div {
+        animation: fadeInUp 0.8s ease-out;
     }
 </style>
 
 <body> 
     <div>
-        <h1>Pirate Island (Versió Millorada)</h1>
+        <h1>🏴‍☠️ Pirate Island 🏴‍☠️</h1>
+        <h1 style="font-size: 1.2rem; border: none; margin-top: -10px;">(Versió Millorada)</h1>
         <p>Fet per: Martí Ferrer</p>
         <p>Projecte Intermodular</p>
-        <button onclick="window.location.href='presentacio.html'">Començar Joc!!</button>
+        <button onclick="window.location.href='presentacio.html'">⚓ COMENÇAR JOC!! ⚓</button>
+        <button onclick="window.location.href='manual.html'"> COM JUGAR ⚓</button>
     </div>
 </body>
 </html>
