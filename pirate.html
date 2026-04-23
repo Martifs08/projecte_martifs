@@ -3,94 +3,165 @@
 
 <style>
     * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    body {
-        height: 100vh;
-        overflow: hidden;  /* Elimina el scroll */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        background-image: url('images/background_pirate.gif');
-    }
-    
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        flex-shrink: 0;
-        font-family: 'Courier New', 'Times New Roman', monospace;
-        letter-spacing: 5px;
-        text-shadow: 2px 2px 0px #8b4513;
-    }
-    
-    #contenidor {
-        display: flex;
-        width: 100%;
-        gap: 30px;
-        justify-content: center;
-        align-items: center;
-        flex-shrink: 0;
-        border-radius: 5px;
-        background-color: rgba(0, 0, 0, 0.8);
-    }
-    
-    #stage {
-        position: relative;
-        width: 384px;
-        height: 384px;
-        background-image: url("images/background.png");
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        margin: 50px
-    }
-    
-    #info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .cell {
-        display: block;
-        position: absolute;
-        width: 64px;
-        height: 64px;
-    }
-    
-    p {
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-        margin: 0;
-        padding: 10px;
-        background-color: #f0f0f0;
-    }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    .barra {
-        width: 40%;
-        background-color: #ddd;
-        height: 12px;
-        margin: 3px 0;
-    }
+body {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-image: url('images/background_pirate.gif');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
-    .barra-dins {
-        height: 12px;
-        width: 0%;
-    }
+/* Capa semi-transparent sobre el fons per millorar llegibilitat */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
 
-    .oro { background-color: gold;  }
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    font-family: 'Times New Roman', 'Georgia', 'Courier New', monospace;
+    letter-spacing: 5px;
+    text-shadow: 3px 3px 0px #3a1a0a;
+    color: #f7d44a;
+    font-size: 2rem;
+    position: relative;
+    z-index: 1;
+}
 
-    .menjar { background-color: green;  }
+#contenidor {
+    display: flex;
+    width: 100%;
+    max-width: 1100px;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(30, 20, 15, 0.9) 100%);
+    backdrop-filter: blur(2px);
+    padding: 20px;
+    border: 2px solid #d4a259;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1;
+}
 
-    .exp { background-color: blue; }
+#stage {
+    position: relative;
+    width: 384px;
+    height: 384px;
+    background-image: url("images/background.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 0 3px #d4a259, 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+#info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+}
+
+.cell {
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    transition: transform 0.05s ease;
+}
+
+/* Estils per als paràgrafs d'informació */
+p {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    margin: 0;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #2a1a0a 0%, #1a0f05 100%);
+    border-radius: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #f0d890;
+    border: 1px solid #d4a259;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+}
+
+/* Etiquetes de les barres (Or, Menjar, Experiència) */
+#info > div:not(.barra) {
+    font-family: 'Times New Roman', 'Georgia', serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #f7d44a;
+    text-shadow: 1px 1px 0px #3a1a0a;
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+.barra {
+    width: 80%;
+    background-color: #3a2a1a;
+    height: 14px;
+    margin: 3px 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.barra-dins {
+    height: 14px;
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 20px;
+}
+
+.oro { 
+    background: linear-gradient(90deg, #ffd700 0%, #ffb347 100%);
+}
+
+.menjar { 
+    background: linear-gradient(90deg, #2d8c3e 0%, #1a6b28 100%);
+}
+
+.exp { 
+    background: linear-gradient(90deg, #3a86ff 0%, #1a56cc 100%);
+}
+
+/* Estil per al missatge de puntuació */
+#puntuacio {
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #3a2510 0%, #2a1a0a 100%);
+    border: 2px solid #f7d44a;
+    color: #ffe8a0;
+}
 </style>
 
 <h1>Primer Nivell: La Illa Dels Pirates</h1>
