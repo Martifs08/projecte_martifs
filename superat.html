@@ -1,41 +1,272 @@
 <!DOCTYPE html>
-<title>Island Adventure</title>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Nivell Superat · Island Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-    body {
-        background-color: #f2f2f2;
-        text-align: center;
-        padding-top: 60px;
-    }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0f0a 50%, #0d0603 100%);
+            text-align: center;
+            padding: 60px 20px;
+            font-family: 'Courier New', 'Times New Roman', 'Georgia', monospace;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
-        color: #333;
-    }
+        /* Fondo de mapa antiguo con efecto parchment */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(139, 69, 19, 0.08) 0px, rgba(139, 69, 19, 0.08) 2px, transparent 2px, transparent 8px),
+                repeating-linear-gradient(135deg, rgba(100, 50, 20, 0.05) 0px, rgba(100, 50, 20, 0.05) 1px, transparent 1px, transparent 6px);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        border: 1px solid #333;
-        background-color: white;
-        cursor: pointer;
-    }
+        /* Partículas flotantes (arena/polvo mágico) */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(2px 2px at 20% 40%, rgba(212, 175, 55, 0.3), rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 60% 80%, rgba(212, 165, 115, 0.2), rgba(0,0,0,0));
+            background-size: 200px 200px, 150px 150px;
+            background-repeat: repeat;
+            pointer-events: none;
+            animation: flotar 20s linear infinite;
+            z-index: 0;
+        }
 
-    button:hover {
-        background-color: #e6e6e6;
-    }
-</style>
+        @keyframes flotar {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 200px 200px, 150px 150px; }
+        }
 
-<body> 
-    <div>
-        <h1>HAS SUPERAT EL NIVELL!!</h1>
-        <p>Puntuació: <span id="punts"></span></p>
-        <button onclick="window.location.href='castle.html'">Avançar últim nivell</button>
-    </div>
-</body>
+        /* Contenedor principal con efecto pergamino */
+        .victoria-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(245, 235, 200, 0.92);
+            backdrop-filter: blur(3px);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 50px 40px;
+            border-radius: 60px 60px 80px 80px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
+            border: 2px solid rgba(212, 175, 55, 0.6);
+            transition: transform 0.3s ease;
+        }
+
+        .victoria-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+        }
+
+        /* Decoración de calavera */
+        .victoria-container::before {
+            content: "☠ ⚓ ☠";
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            letter-spacing: 8px;
+            color: #8b4513;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+            background: rgba(245, 235, 200, 0.9);
+            padding: 0 20px;
+            border-radius: 30px;
+        }
+
+        /* Esquinas decorativas */
+        .victoria-container::after {
+            content: "⚔";
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            font-size: 1.5em;
+            opacity: 0.5;
+            color: #8b6914;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #5a2a0a;
+            text-shadow: 3px 3px 0px rgba(184, 124, 58, 0.3);
+            border-bottom: 2px solid #d4a373;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #2a1a0a;
+            margin: 25px 0;
+            text-align: center;
+            text-shadow: 0.5px 0.5px 0px rgba(255,255,255,0.5);
+            letter-spacing: 0.5px;
+        }
+
+        .puntuacio-destacada {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #c97e2a;
+            background: rgba(90, 42, 10, 0.15);
+            display: inline-block;
+            padding: 5px 20px;
+            border-radius: 40px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 14px 35px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border: 2px solid #b87c3a;
+            background: linear-gradient(135deg, #4a2a15 0%, #2a1508 100%);
+            color: #f0d890;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #6a3a1a 0%, #3a1a0a 100%);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+            border-color: #f0c060;
+            color: #ffe8a0;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Decoración de iconos alrededor del botón */
+        button::before {
+            content: "⚔";
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        button:hover::before {
+            opacity: 1;
+            left: -25px;
+        }
+
+        button::after {
+            content: "⚔";
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        button:hover::after {
+            opacity: 1;
+            right: -25px;
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .victoria-container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 550px) {
+            body {
+                padding: 30px 15px;
+            }
+            .victoria-container {
+                padding: 40px 25px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            .puntuacio-destacada {
+                font-size: 1.3rem;
+            }
+            button {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+            .victoria-container::before {
+                font-size: 1.3em;
+                top: -18px;
+                letter-spacing: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="victoria-container">
+    <h1>🏆 HAS SUPERAT EL NIVELL!! 🏆</h1>
+    
+    <p>La teva gesta quedarà gravada als llibres pirata...</p>
+    
+    <p>Puntuació aconseguida:</p>
+    <div class="puntuacio-destacada" id="punts">---</div>
+    
+    <button onclick="window.location.href='castle.html'">⚓ AVANÇAR A L'ÚLTIM NIVELL ⚓</button>
+</div>
+
 <script>
     const points = sessionStorage.getItem("points");
     document.getElementById("punts").textContent = points;
 </script>
+
+</body>
 </html>

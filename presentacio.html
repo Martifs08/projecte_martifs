@@ -1,42 +1,221 @@
 <!DOCTYPE html>
-<html>
+<html lang="ca">
 <head>
-<title>Introducció</title>
+    <meta charset="UTF-8">
+    <title>Introducció · Island Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-body {
-    background-color: #f2f2f2;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding-top: 80px;
-}
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0f0a 50%, #0d0603 100%);
+            text-align: center;
+            padding: 60px 20px;
+            font-family: 'Courier New', 'Times New Roman', 'Georgia', monospace;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-#text {
-    width: 600px;
-    margin: auto;
-    font-size: 1.2rem;
-    color: #333;
-}
-</style>
+        /* Fondo de mapa antiguo con efecto parchment */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(139, 69, 19, 0.08) 0px, rgba(139, 69, 19, 0.08) 2px, transparent 2px, transparent 8px),
+                repeating-linear-gradient(135deg, rgba(100, 50, 20, 0.05) 0px, rgba(100, 50, 20, 0.05) 1px, transparent 1px, transparent 6px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Partículas flotantes (arena/polvo mágico) */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(2px 2px at 20% 40%, rgba(212, 175, 55, 0.3), rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 60% 80%, rgba(212, 165, 115, 0.2), rgba(0,0,0,0));
+            background-size: 200px 200px, 150px 150px;
+            background-repeat: repeat;
+            pointer-events: none;
+            animation: flotar 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes flotar {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 200px 200px, 150px 150px; }
+        }
+
+        /* Contenedor principal con efecto pergamino */
+        .intro-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(245, 235, 200, 0.92);
+            backdrop-filter: blur(3px);
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 50px 40px;
+            border-radius: 60px 60px 80px 80px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
+            border: 2px solid rgba(212, 175, 55, 0.6);
+            transition: transform 0.3s ease;
+        }
+
+        .intro-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+        }
+
+        /* Decoración de calavera */
+        .intro-container::before {
+            content: "☠ ⚓ ☠";
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            letter-spacing: 8px;
+            color: #8b4513;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+            background: rgba(245, 235, 200, 0.9);
+            padding: 0 20px;
+            border-radius: 30px;
+        }
+
+        /* Esquinas decorativas */
+        .intro-container::after {
+            content: "⚔";
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            font-size: 1.5em;
+            opacity: 0.5;
+            color: #8b6914;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-family: 'Times New Roman', 'Georgia', serif;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #5a2a0a;
+            text-shadow: 3px 3px 0px rgba(184, 124, 58, 0.3);
+            border-bottom: 2px solid #d4a373;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.15em;
+            line-height: 1.8;
+            color: #2a1a0a;
+            margin: 20px 0;
+            text-align: center;
+            text-shadow: 0.5px 0.5px 0px rgba(255,255,255,0.5);
+            letter-spacing: 0.5px;
+        }
+
+        /* Missatge d'instruccions */
+        .missatge-tecla {
+            margin-top: 30px;
+            padding: 12px;
+            background: rgba(212, 163, 115, 0.3);
+            border-radius: 40px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #5a2a0a;
+            border: 1px solid #d4a373;
+        }
+
+        .tecla {
+            background: #2a1a0a;
+            color: #f0d890;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            display: inline-block;
+            margin: 0 5px;
+            border: 1px solid #d4a373;
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .intro-container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 550px) {
+            body {
+                padding: 30px 15px;
+            }
+            .intro-container {
+                padding: 40px 25px;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            p {
+                font-size: 1em;
+            }
+            .intro-container::before {
+                font-size: 1.3em;
+                top: -18px;
+                letter-spacing: 5px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="text">
-    <h1>Benvingut a Island Adventure</h1>
+<div class="intro-container">
+    <h1>🏴‍☠️ BENVINGUT 🏴‍☠️</h1>
+    <h1 style="font-size: 1.3rem; border: none; margin-top: -10px;">a Island Adventure</h1>
+    
     <p>
-        Fa molts anys, una tempesta terrible va separar el teu vaixell de la flota.
-        Ara navegues sol, buscant recursos, lluitant contra pirates i monstres,
+        Fa molts anys, una tempesta terrible va separar el teu vaixell de la flota.<br>
+        Ara navegues sol, buscant recursos, lluitant contra pirates i monstres,<br>
         i intentant trobar el camí de tornada a casa.
     </p>
+    
+    <div class="missatge-tecla">
+        ⚓ Prem <span class="tecla">⏎ ENTER</span> per començar l'aventura ⚓
+    </div>
 </div>
 
 <script>
-window.addEventListener("keydown", function(e) {
-    if (e.keyCode === 13) {
-        window.location.href = "pirate.html";
-    }
-});
+    window.addEventListener("keydown", function(event) {
+        if (event.keyCode === 13) { 
+            window.location.href = "pirate.html";
+        }
+    });
 </script>
 
 </body>
