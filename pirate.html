@@ -162,37 +162,123 @@ p {
     border: 2px solid #f7d44a;
     color: #ffe8a0;
 }
+
+/* Contenidor principal que volem amagar/mostrar */
+.contingut-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.contenidor-botiga {
+    display: none; 
+    position: fixed;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.contingut-botiga {
+    background: rgba(62, 39, 35, 0.95);
+    border: 4px solid #ffd700;
+    padding: 30px;
+    width: 350px;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    color: #fff;
+    border-radius: 15px;
+}
+
+.titol-botiga{
+    margin-top: 0;
+    color: #ffd700;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px #000;
+    margin-bottom: 20px;
+}
+
+.missatge-botiga {
+    background: rgba(0,0,0,0.6);
+    margin: 15px 0;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.accions-botiga {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.boto-botiga {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: transform 0.2s;
+}
+
+.boto-comprar { background: #2e7d32; }
+.boto-sortir { background: #c62828; }
 </style>
 
-<h1>Primer Nivell: La Illa Dels Pirates</h1>
+<div class="contingut-principal" id="contingutPrincipal">
+    <h1>Primer Nivell: La Illa Dels Pirates</h1>
 
-<div id="contenidor">
-    <div id="stage"></div>
-    <div id="info">
-        <p id="output"></p>
-        <p id="motxilla"></p>
-        <p id="puntuacio"></p>
+    <div id="contenidor">
+        <div id="stage"></div>
+        <div id="info">
+            <p id="output"></p>
+            <p id="motxilla"></p>
+            <p id="puntuacio"></p>
 
-        <div>Or</div>
-        <div class="barra"><div id="barra-oro" class="barra-dins oro"></div></div>
+            <div>Or</div>
+            <div class="barra"><div id="barra-oro" class="barra-dins oro"></div></div>
 
-        <div>Menjar</div>
-        <div class="barra"><div id="barra-menjar" class="barra-dins menjar"></div></div>
+            <div>Menjar</div>
+            <div class="barra"><div id="barra-menjar" class="barra-dins menjar"></div></div>
 
-        <div>Experiència</div>
-        <div class="barra"><div id="barra-exp" class="barra-dins exp"></div></div>
+            <div>Experiència</div>
+            <div class="barra"><div id="barra-exp" class="barra-dins exp"></div></div>
+        </div>
     </div>
 </div>
 
+<div id="botiga" class="contenidor-botiga">
+    <div class="contingut-botiga">
+        <h2 class="titol-botiga">ILLA DE SUMINISTRES</h2>
+        <p id="text-botiga" class="missatge-botiga"></p>
+        <div class="accions-botiga">
+            <button class="boto-botiga boto-comprar" onclick="trade()">COMPRAR</button>
+            <button class="boto-botiga boto-sortir" onclick="tancarBotiga()">TANCAR</button>
+        </div>
+    </div>
+</div>
 
 <script>
-
 var stage = document.querySelector("#stage");
 var output = document.querySelector("#output");
 var puntuacio = document.querySelector("#puntuacio");
+var botiga = document.querySelector("#botiga");
+var contingutPrincipal = document.querySelector("#contingutPrincipal");
 
 //Add a keyboard listener
 window.addEventListener("keydown", keydownHandler, false);
+botiga.style.display = "none";
 
 //The game map
 var map =
@@ -263,11 +349,13 @@ for(var row = 0; row < ROWS; row++)
     }
 }
 
-
 render();
 
 function keydownHandler(event)
 {
+    // Si la botiga està oberta, no processem moviments
+    if(botiga.style.display === "flex") return;
+    
     switch(event.keyCode)
     {
         case UP:
@@ -319,13 +407,12 @@ function keydownHandler(event)
         break;
 
         case ISLAND:
-            trade();
+            obrirBotiga();
         break;
 
         case HOME:
             endGame();
         break;
-
     }
 
     moveMonster();
@@ -382,60 +469,61 @@ function moveMonster(){
     switch(direction)
     {
         case UP:
-            //monsterRow--;
             gameObjects[--monsterRow][monsterColumn] = MONSTER;
         break;
 
         case DOWN:
-            //monsterRow++;
             gameObjects[++monsterRow][monsterColumn] = MONSTER;
         break;
 
         case LEFT:
-            //monsterColumn--;
             gameObjects[monsterRow][--monsterColumn] = MONSTER;
         break;
 
         case RIGHT:
-            //monsterColumn++;
             gameObjects[monsterRow][++monsterColumn] = MONSTER;
         break;
     }
 
 }
 
-
 function fight(){
     var shipStrength = Math.ceil((food + gold) / 2);
-
     var pirateStrength = Math.ceil(Math.random() * shipStrength * 2);
 
     if(pirateStrength > shipStrength)
     {
         var stolenGold = Math.round(pirateStrength / 2);
         gold -= stolenGold;
-
         experience += 1;
-
         gameMessage = "You fight and LOSE " + stolenGold + " gold pieces."
           + " Ship's strength: " + shipStrength
           + " Pirate strength: " + pirateStrength;
-
         points -= 10;
     }   
     else
     {
         var pirateGold = Math.round(pirateStrength / 2);
         gold += pirateGold;
-
         experience += 2;
-
         gameMessage = "You fight and WIN " + pirateGold + " gold pieces."
           + " Ship's strength: " + shipStrength
           + " Pirate strength: " + pirateStrength;
-
         points += 20;
     }
+    render();
+}
+
+function obrirBotiga(){
+    // Amagar tot el contingut principal
+    contingutPrincipal.style.display = "none";
+    
+    // Mostrar la botiga
+    botiga.style.display = "flex";
+    
+    // Actualitzar el missatge de la botiga
+    var textBotiga = document.querySelector("#text-botiga");
+    textBotiga.innerHTML = `Or: ${gold} | Menjar: ${food}<br><br>Vols comprar subministraments?`;
 }
 
 function trade(){
@@ -450,8 +538,7 @@ function trade(){
         gold -= cost;
         experience += 2;
         points += 10;
-
-        gameMessage = "you buy " + islandFood + " coconuts"
+        gameMessage = "You buy " + islandFood + " coconuts"
            + " for " + cost + " gold pieces."
     }
     else
@@ -460,6 +547,23 @@ function trade(){
         gameMessage = "You don't have enough gold to buy food."
         points -= 5;
     }
+    
+    // Actualitzar el missatge de la botiga després de la transacció
+    var textBotiga = document.querySelector("#text-botiga");
+    textBotiga.innerHTML = gameMessage + "<br><br>Or: " + gold + " | Menjar: " + food;
+    
+    render();
+}
+
+function tancarBotiga(){
+    // Amagar la botiga
+    botiga.style.display = "none";
+    
+    // Mostrar el contingut principal
+    contingutPrincipal.style.display = "flex";
+    
+    // Assegurar-se que el render està actualitzat
+    render();
 }
 
 function endGame(){
@@ -469,16 +573,14 @@ function endGame(){
         points += 50;
         sessionStorage.setItem("points", points);
         sessionStorage.setItem("gameMessage", gameMessage);
-
         window.location.href = "superat.html";
     }
-    if(gameObjects[shipRow][shipColumn] === MONSTER)
+    else if(gameObjects[shipRow][shipColumn] === MONSTER)
     {
        gameMessage = "Your ship has been swallowed by a sea monster!";
        points -= 150;
        sessionStorage.setItem("points", points);
        sessionStorage.setItem("gameMessage", gameMessage);
-
        window.location.href = "fi.html";
     }
     else
@@ -488,7 +590,6 @@ function endGame(){
             gameMessage += " You've run out of gold!";
             sessionStorage.setItem("points", points);
             sessionStorage.setItem("gameMessage", gameMessage);
-            
             window.location.href = "fi.html";  
         }
         else if (food <= 0)
@@ -496,13 +597,12 @@ function endGame(){
             gameMessage += " You've run out of food!";
             sessionStorage.setItem("points", points);
             sessionStorage.setItem("gameMessage", gameMessage);
-
             window.location.href = "fi.html"; 
         } 
        
-    //Remove the keyboard listener
-    window.removeEventListener("keydown", keydownHandler, false);
-}
+        //Remove the keyboard listener
+        window.removeEventListener("keydown", keydownHandler, false);
+    }
 }
 
 function render()
@@ -522,7 +622,6 @@ function render()
         for(var column = 0; column < COLUMNS; column++)
             {
                 var cell = document.createElement("img");
-                //Set its CSS class to "cell"
                 cell.setAttribute("class", "cell");
                 stage.appendChild(cell);
 
@@ -551,7 +650,6 @@ function render()
                         break;
                 }
 
-                //Position the cell
                 cell.style.top = row * SIZE + "px";
                 cell.style.left = column * SIZE + "px";
             }
@@ -559,7 +657,7 @@ function render()
 
     // Display the game gameMessage
     output.innerHTML = gameMessage;
-
+    
     //Display the playter's food, gold aand experience
     output.innerHTML += "<br>Gold: " + gold + ", Food: "
         + food + ", Experience: " + experience;
@@ -577,5 +675,4 @@ function actualizarBarras() {
     if (barraMenjar) barraMenjar.style.width = Math.min(100, (food / 100) * 100) + "%";
     if (barraExp) barraExp.style.width = Math.min(100, (experience / 50) * 100) + "%";
 }
-
 </script>
