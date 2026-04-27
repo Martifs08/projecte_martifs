@@ -54,11 +54,6 @@
             z-index: 0;
         }
 
-        @keyframes flotar {
-            0% { background-position: 0 0, 0 0; }
-            100% { background-position: 200px 200px, 150px 150px; }
-        }
-
         /* Contenedor principal con efecto pergamino */
         .intro-container {
             position: relative;
@@ -97,7 +92,6 @@
 
         /* Esquinas decorativas */
         .intro-container::after {
-            content: "⚔";
             position: absolute;
             bottom: 15px;
             left: 20px;
@@ -155,41 +149,8 @@
             border: 1px solid #d4a373;
         }
 
-        /* Animación de entrada */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .intro-container {
             animation: fadeInUp 0.8s ease-out;
-        }
-
-        /* Responsive */
-        @media (max-width: 550px) {
-            body {
-                padding: 30px 15px;
-            }
-            .intro-container {
-                padding: 40px 25px;
-            }
-            h1 {
-                font-size: 1.6rem;
-            }
-            p {
-                font-size: 1em;
-            }
-            .intro-container::before {
-                font-size: 1.3em;
-                top: -18px;
-                letter-spacing: 5px;
-            }
         }
     </style>
 </head>
@@ -206,7 +167,7 @@
     </p>
     
     <div class="missatge-tecla">
-        ⚓ Prem <span class="tecla">⏎ ENTER</span> per començar l'aventura ⚓
+        ⚓ Prem <span class="tecla">ENTER</span> per començar l'aventura ⚓
     </div>
 </div>
 

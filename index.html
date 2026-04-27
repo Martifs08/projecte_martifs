@@ -35,28 +35,6 @@
         z-index: 0;
     }
 
-    /* Partículas flotantes (arena/polvo mágico) */
-    body::after {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: radial-gradient(2px 2px at 20% 40%, rgba(212, 175, 55, 0.3), rgba(0,0,0,0)),
-                          radial-gradient(1px 1px at 60% 80%, rgba(212, 165, 115, 0.2), rgba(0,0,0,0));
-        background-size: 200px 200px, 150px 150px;
-        background-repeat: repeat;
-        pointer-events: none;
-        animation: flotar 20s linear infinite;
-        z-index: 0;
-    }
-
-    @keyframes flotar {
-        0% { background-position: 0 0, 0 0; }
-        100% { background-position: 200px 200px, 150px 150px; }
-    }
-
     /* Contenedor principal con efecto pergamino */
     div {
         position: relative;
@@ -170,7 +148,6 @@
 
     /* Decoración de iconos alrededor del botón */
     button::before {
-        content: "⚔";
         position: absolute;
         left: -30px;
         top: 50%;
@@ -186,7 +163,6 @@
     }
 
     button::after {
-        content: "⚔";
         position: absolute;
         right: -30px;
         top: 50%;
@@ -199,49 +175,6 @@
     button:hover::after {
         opacity: 1;
         right: -25px;
-    }
-
-    /* Responsive */
-    @media (max-width: 550px) {
-        body {
-            padding: 30px 15px;
-        }
-        
-        div {
-            padding: 40px 25px;
-        }
-        
-        h1 {
-            font-size: 1.6rem;
-            letter-spacing: 2px;
-        }
-        
-        p {
-            font-size: 1em;
-        }
-        
-        button {
-            padding: 10px 25px;
-            font-size: 1rem;
-        }
-        
-        div::before {
-            font-size: 1.3em;
-            top: -18px;
-            letter-spacing: 5px;
-        }
-    }
-
-    /* Animación de entrada */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
     }
 
     div {

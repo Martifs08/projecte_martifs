@@ -529,7 +529,7 @@ function obrirBotiga(){
 function trade(){
     //Figure out how much food the island have and the cost
     var islandFood = experience + gold;
-    var cost = Math.ceil(Math.random() * islandFood);
+    var cost = 6;
     
     //Let the player buy food if there's enough gold
     if (gold > cost)

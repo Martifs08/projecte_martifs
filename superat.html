@@ -54,11 +54,6 @@
             z-index: 0;
         }
 
-        @keyframes flotar {
-            0% { background-position: 0 0, 0 0; }
-            100% { background-position: 200px 200px, 150px 150px; }
-        }
-
         /* Contenedor principal con efecto pergamino */
         .victoria-container {
             position: relative;
@@ -97,7 +92,6 @@
 
         /* Esquinas decorativas */
         .victoria-container::after {
-            content: "⚔";
             position: absolute;
             bottom: 15px;
             left: 20px;
@@ -190,7 +184,6 @@
         }
 
         button::after {
-            content: "⚔";
             position: absolute;
             right: -30px;
             top: 50%;
@@ -205,49 +198,10 @@
             right: -25px;
         }
 
-        /* Animación de entrada */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .victoria-container {
             animation: fadeInUp 0.8s ease-out;
         }
 
-        /* Responsive */
-        @media (max-width: 550px) {
-            body {
-                padding: 30px 15px;
-            }
-            .victoria-container {
-                padding: 40px 25px;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-            p {
-                font-size: 1rem;
-            }
-            .puntuacio-destacada {
-                font-size: 1.3rem;
-            }
-            button {
-                padding: 10px 25px;
-                font-size: 0.9rem;
-            }
-            .victoria-container::before {
-                font-size: 1.3em;
-                top: -18px;
-                letter-spacing: 5px;
-            }
-        }
     </style>
 </head>
 <body>

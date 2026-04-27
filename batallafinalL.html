@@ -34,8 +34,8 @@ video {
 <div id="text">Prem ENTER per continuar...</div>
 
 <script>
-window.addEventListener("keydown", function(e){
-    if (e.key === "Enter") {
+window.addEventListener("keydown", function(event){
+    if (event.keyCode === 13) {
         window.location.href = "fi.html";
     }
 });
