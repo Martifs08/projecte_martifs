@@ -506,9 +506,9 @@ function fight(){
         var pirateGold = Math.round(pirateStrength / 2);
         gold += pirateGold;
         experience += 2;
-        gameMessage = "Has lluitat i has guanyat" + pirateGold + " gold pieces."
-          + " Ship's strength: " + shipStrength
-          + " Pirate strength: " + pirateStrength;
+        gameMessage = "Has lluitat i has GUANYAT" + pirateGold + " peces d'or."
+          + " Força del vaixell: " + shipStrength
+          + " Força del pirata: " + pirateStrength;
         points += 20;
     }
     render();
@@ -538,13 +538,13 @@ function trade(){
         gold -= cost;
         experience += 2;
         points += 10;
-        gameMessage = "You buy " + islandFood + " coconuts"
-           + " for " + cost + " gold pieces."
+        gameMessage = "Has comprat " + islandFood + " cocos"
+           + " per " + cost + " peces d'or."
     }
     else
     {   //Tell the player if he does not have enough gold
         experience += 1;
-        gameMessage = "You don't have enough gold to buy food."
+        gameMessage = "No tens prous diners per comprar menjar!."
         points -= 5;
     }
     
@@ -569,40 +569,40 @@ function tancarBotiga(){
 function endGame(){
     if(map[shipRow][shipColumn] === HOME)
     {
-        gameMessage = "You made it home ALIVE! ";
+        gameMessage = "Has arribat a casa SA I ESTALVI! ";
         points += 50;
         sessionStorage.setItem("points", points);
         sessionStorage.setItem("gameMessage", gameMessage);
-        window.location.href = "superat.html";
+        window.location.href = "superat.html"; 
     }
     else if(gameObjects[shipRow][shipColumn] === MONSTER)
     {
-       gameMessage = "Your ship has been swallowed by a sea monster!";
+       gameMessage = "El teu vaixell ha set engolit per un monstre marí!";
        points -= 150;
-       sessionStorage.setItem("points", points);
-       sessionStorage.setItem("gameMessage", gameMessage);
-       window.location.href = "fi.html";
+       final();
     }
     else
     {
         if(gold <= 0)
         {
-            gameMessage += " You've run out of gold!";
-            sessionStorage.setItem("points", points);
-            sessionStorage.setItem("gameMessage", gameMessage);
-            window.location.href = "fi.html";  
+            gameMessage += " T'has quedat sense or!";
+            final();
         }
         else if (food <= 0)
         {
-            gameMessage += " You've run out of food!";
-            sessionStorage.setItem("points", points);
-            sessionStorage.setItem("gameMessage", gameMessage);
-            window.location.href = "fi.html"; 
+            gameMessage += " T'has quedat sense menjar!";
+            final();
         } 
        
         //Remove the keyboard listener
         window.removeEventListener("keydown", keydownHandler, false);
     }
+}
+
+function final(){
+    sessionStorage.setItem("points", points);
+    sessionStorage.setItem("gameMessage", gameMessage);
+    window.location.href = "fi.html"; 
 }
 
 function render()
@@ -659,8 +659,8 @@ function render()
     output.innerHTML = gameMessage;
     
     //Display the playter's food, gold aand experience
-    output.innerHTML += "<br>Gold: " + gold + ", Food: "
-        + food + ", Experience: " + experience;
+    output.innerHTML += "<br>🪙: " + gold + ", 🍗: "
+        + food + ", 🦾: " + experience;
 
     puntuacio.innerHTML = "Punts: " + points;
     actualizarBarras();
