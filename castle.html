@@ -389,7 +389,7 @@ var jefeColumn;
 var food = 20;
 var gold = 10;
 var experience = 0;
-var gameMessage = "Fes servir les fletxes per trobar el camí a CASA."
+var gameMessage = "Use the arrow keys to find your way home."
 let points2 = 0;
 let jefeDerrotat = false;
 let motxillaContador = 0;
@@ -466,7 +466,7 @@ function keydownHandler(event)
     switch(map[shipRow][shipColumn])
     {
         case WATER:
-            gameMessage = "Camines per terres infernals."
+            gameMessage = "You sail the open seas."
         break;
 
         case PIRATE:
@@ -659,13 +659,13 @@ function trade(){
         gold -= cost;
         experience += 2;
         points2 += 10;
-        gameMessage = "Has comprat " + islandFood + " cocos"
-           + " per " + cost + " peces d'or."
+        gameMessage = "You buy " + islandFood + " coconuts"
+           + " for " + cost + " gold pieces."
     }
     else
     {   //Tell the player if he does not have enough gold
         experience += 1;
-        gameMessage = "No tens prou or per comprar menjar!"
+        gameMessage = "You don't have enough gold to buy food."
         points2 -= 5;
     }
     
@@ -707,9 +707,9 @@ function fight(){
 
         experience += 1;
 
-        gameMessage = "Has lluitat i has perdut! " + stolenGold + " peces d'or."
-          + " Força del tripulant: " + shipStrength
-          + " Força del pirata: " + pirateStrength;
+        gameMessage = "You fight and LOSE " + stolenGold + " gold pieces."
+          + " Ship's strength: " + shipStrength
+          + " Pirate strength: " + pirateStrength;
 
         points2 -= 10;
     }   
@@ -720,9 +720,9 @@ function fight(){
 
         experience += 2;
 
-        gameMessage = "Has lluitat i has GUANYAT " + pirateGold + " peces d'or."
-          + " Força del tripulant: " + shipStrength
-          + " Força del pirata: " + pirateStrength;
+        gameMessage = "You fight and WIN " + pirateGold + " gold pieces."
+          + " Ship's strength: " + shipStrength
+          + " Pirate strength: " + pirateStrength;
 
         points2 += 20;
     }
@@ -731,7 +731,7 @@ function fight(){
 function endGame(){
     if(gameObjects[shipRow][shipColumn] === MONSTER)
     {
-       gameMessage = "Has set engolit per un monstre marí!";
+       gameMessage = "Your ship has been swallowed by a sea monster!";
        points2 -= 150;
        sessionStorage.setItem("points2", points2);
        sessionStorage.setItem("gameMessage", gameMessage);
@@ -753,7 +753,7 @@ function endGame(){
     {
         if(gold <= 0)
         {
-            gameMessage += " T'has quedat sense or!";
+            gameMessage += " You've run out of gold!";
             sessionStorage.setItem("points2", points2);
             sessionStorage.setItem("gameMessage", gameMessage);
             let p1 = Number(sessionStorage.getItem("points")) || 0;
@@ -768,7 +768,7 @@ function endGame(){
         }
         else if (food <= 0)
         {
-            gameMessage += " T'has quedat sense menjar!";
+            gameMessage += " You've run out of food!";
             sessionStorage.setItem("points2", points2);
             sessionStorage.setItem("gameMessage", gameMessage);
             let p1 = Number(sessionStorage.getItem("points")) || 0;
@@ -878,8 +878,8 @@ function render()
     output.innerHTML = gameMessage;
 
     //Display the playter's food, gold aand experience
-    output.innerHTML += "<br>Or: " + gold + "<br>Menjar: "
-        + food + "<br>Experiència: " + experience; 
+    output.innerHTML += "<br>Gold: " + gold + "<br>Food: "
+        + food + "<br>Experience: " + experience; 
     
     puntuacio.innerHTML = "Punts: " + points2;
     motxilla.innerHTML = "Motxilla: " + motxillaItems;
