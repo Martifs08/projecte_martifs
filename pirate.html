@@ -506,9 +506,9 @@ function fight(){
         var pirateGold = Math.round(pirateStrength / 2);
         gold += pirateGold;
         experience += 2;
-        gameMessage = "Has lluitat i has GUANYAT" + pirateGold + " peces d'or."
-          + " Força del vaixell: " + shipStrength
-          + " Força del pirata: " + pirateStrength;
+        gameMessage = "Has lluitat i has guanyat" + pirateGold + " gold pieces."
+          + " Ship's strength: " + shipStrength
+          + " Pirate strength: " + pirateStrength;
         points += 20;
     }
     render();
@@ -538,8 +538,8 @@ function trade(){
         gold -= cost;
         experience += 2;
         points += 10;
-        gameMessage = "Has comprat " + islandFood + " cocos"
-           + " per " + cost + " peces d'or."
+        gameMessage = "Has comprat" + islandFood + " cocos"
+           + " per " + cost + " peces d."
     }
     else
     {   //Tell the player if he does not have enough gold
@@ -571,8 +571,7 @@ function endGame(){
     {
         gameMessage = "Has arribat a casa SA I ESTALVI! ";
         points += 50;
-        sessionStorage.setItem("points", points);
-        sessionStorage.setItem("gameMessage", gameMessage);
+        final();
         window.location.href = "superat.html"; 
     }
     else if(gameObjects[shipRow][shipColumn] === MONSTER)
@@ -580,18 +579,21 @@ function endGame(){
        gameMessage = "El teu vaixell ha set engolit per un monstre marí!";
        points -= 150;
        final();
+       window.location.href = "fi.html"; 
     }
     else
     {
         if(gold <= 0)
         {
-            gameMessage += " T'has quedat sense or!";
+            gameMessage += "T'has quedat sense or!";
             final();
+            window.location.href = "fi.html"; 
         }
         else if (food <= 0)
         {
             gameMessage += " T'has quedat sense menjar!";
             final();
+            window.location.href = "fi.html"; 
         } 
        
         //Remove the keyboard listener
@@ -602,7 +604,6 @@ function endGame(){
 function final(){
     sessionStorage.setItem("points", points);
     sessionStorage.setItem("gameMessage", gameMessage);
-    window.location.href = "fi.html"; 
 }
 
 function render()

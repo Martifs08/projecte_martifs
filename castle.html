@@ -391,7 +391,6 @@ var gold = 10;
 var experience = 0;
 var gameMessage = "Fes servir les fletxes per trobar el camí cap a casa."
 let points2 = 0;
-let jefeDerrotat = false;
 let motxillaContador = 0;
 let motxillaItems = [];
 let imatgeprota = "images/prota_no_sword.png";
@@ -761,14 +760,13 @@ function endGame(){
 }
 
 function batallafinal(){
-    if(motxillaContador === 0 && jefeDerrotat === false){
+    if(motxillaContador === 0){
         window.location.href = "batallafinalL.html";
         gameMessage = "No has pogut amb el jefe Periquito";
         final();
     }
-    if(motxillaContador === 1 && jefeDerrotat === false){
+    if(motxillaContador === 1){
         window.location.href = "batallafinalW.html";
-        jefeDerrotat = true;
         gameMessage = "Has derrotat al jefe Periquito!! Enhorabona";
         final();
     }
