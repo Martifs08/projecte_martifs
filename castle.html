@@ -394,7 +394,8 @@ let points2 = 0;
 let jefeDerrotat = false;
 let motxillaContador = 0;
 let motxillaItems = [];
-var imatgeprota = "images/prota_no_sword.png";
+let imatgeprota = "images/prota_no_sword.png";
+let img_espasa = "images/espasa.png"
 
 for(var row = 0; row < ROWS; row++)
 {
@@ -691,6 +692,7 @@ function espasa(){
     motxillaContador ++;
     motxillaItems = "Espasa";
     imatgeprota = "images/prota.png";
+    img_espasa = "images/water.png";
 }
 
 function fight(){
@@ -844,13 +846,13 @@ function render()
                         cell.src = "images/water.png";
                         break;
                     case ISLAND:
-                        cell.src = "images/island.png";
+                        cell.src = "images/island2.png";
                         break;
                     case PIRATE:
                         cell.src = "images/skeleton.png";
                         break;
                     case ESPASA:
-                        cell.src = "images/espasa.png";
+                        cell.src = img_espasa;
                         break;
                 }
                 switch(gameObjects[row][column])
