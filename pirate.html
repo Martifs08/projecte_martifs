@@ -143,7 +143,7 @@ p {
     border-radius: 20px;
 }
 
-.oro { 
+.or { 
     background: linear-gradient(90deg, #ffd700 0%, #ffb347 100%);
 }
 
@@ -247,7 +247,7 @@ p {
             <p id="puntuacio"></p>
 
             <div>Or</div>
-            <div class="barra"><div id="barra-oro" class="barra-dins oro"></div></div>
+            <div class="barra"><div id="barra-or" class="barra-dins or"></div></div>
 
             <div>Menjar</div>
             <div class="barra"><div id="barra-menjar" class="barra-dins menjar"></div></div>
@@ -660,19 +660,19 @@ function render()
     output.innerHTML = gameMessage;
     
     //Display the playter's food, gold aand experience
-    output.innerHTML += "<br>🪙: " + gold + ", 🍗: "
-        + food + ", 🦾: " + experience;
+    output.innerHTML += "<br>Or: " + gold + ", Menjar: "
+        + food + ", Experiència: " + experience;
 
     puntuacio.innerHTML = "Punts: " + points;
-    actualizarBarras();
+    actualitzarBarres();
 }
 
-function actualizarBarras() {
-    var barraOro = document.getElementById("barra-oro");
+function actualitzarBarres() {
+    var barraOr = document.getElementById("barra-or");
     var barraMenjar = document.getElementById("barra-menjar");
     var barraExp = document.getElementById("barra-exp");
     
-    if (barraOro) barraOro.style.width = Math.min(100, (gold / 100) * 100) + "%";
+    if (barraOr) barraOr.style.width = Math.min(100, (gold / 100) * 100) + "%";
     if (barraMenjar) barraMenjar.style.width = Math.min(100, (food / 100) * 100) + "%";
     if (barraExp) barraExp.style.width = Math.min(100, (experience / 50) * 100) + "%";
 }
